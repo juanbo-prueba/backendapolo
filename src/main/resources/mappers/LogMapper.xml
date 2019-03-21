@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cofar.backendapolo.component.mapper.LogMapper">
+    <insert id="guardar"
+            parameterType="com.cofar.backendapolo.component.model.Log">
+
+            INSERT INTO LOG_APOLO(FECHA_REGISTRO, DETALLE, USUARIO, URL, TIEMPO_RESPUESTA) VALUES (
+              #{log.fecha}, #{log.detalle}, #{log.nombreUsuario}, #{log.url}, #{log.tiempoRespuesta}
+            )
+
+    </insert>
+</mapper>
