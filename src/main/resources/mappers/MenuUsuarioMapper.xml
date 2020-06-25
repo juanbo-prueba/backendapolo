@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cofar.backendapolo.menuUsuario.mapper.MenuUsuarioMapper">
+
+    <select id="obtieneListaMenu" resultType="com.cofar.backendapolo.menuUsuario.model.VentanasZeus">
+        select v.COD_VENTANA as codVentana, v.PATH as path , v.ICONO as icon, v.TITULO as title, v.COD_PADRE as codPadre
+        from USUARIOS_ACCESOS_ZEUS_PLUS u inner join PERFIL_ZEUS_PLUS p
+        on u.COD_PERFIL = p.COD_PERFIL
+        inner join PERFIL_ZEUS_PLUS_DETALLE pd
+        on p.COD_PERFIL = pd.COD_PERFIL
+        inner join VENTANAS_ZEUS_PLUS v
+        on pd.COD_VENTANA = v.COD_VENTANA
+        where u.COD_PERSONAL = #{codPersonal}
+        and p.ESTADO_REGISTRO = 1
+        and v.ESTADO_REGISTRO = 1
+
+    </select>
+</mapper>

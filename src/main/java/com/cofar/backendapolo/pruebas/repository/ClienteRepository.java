@@ -14,6 +14,9 @@ public class ClienteRepository {
     private ClienteMapper clienteMapper;
 
     public List<Cliente> listarClientes() {
-        return clienteMapper.listarClientes();
+        List<Cliente> clientes = clienteMapper.listarClientes();
+        System.out.println("**Clientes: " + clientes );
+
+        return clientes;
     }
 }

@@ -40,13 +40,13 @@ public class UsuarioPrincipal implements UserDetails {
 //        List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
 //                new SimpleGrantedAuthority(role.getName().name())
 //        ).collect(Collectors.toList());
-
+        System.out.println("entra a create");
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         //authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-        System.out.println("entra a asigna rol 1");
+
        // authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        System.out.println("termina asignar rol: " );
+
 
 
         return new UsuarioPrincipal(

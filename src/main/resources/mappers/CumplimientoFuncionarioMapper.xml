@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cofar.backendapolo.cumplimientoFuncionario.mapper.CumplimientoFuncionarioMapper">
+
+    <select id="obtenerCumplimientoFucionarioGeneral"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.payload.CumplimientoFucionarioGeneral">
+
+            select p.COD_PERSONAL as codPersonal, sum(p.MONTO_PRESUPUESTO) as montoPresupuesto,
+            SUM(p.MONTO_VENTA) as montoVenta,
+            SUM(p.UNIDAD_PRESUPUESTADA) as cantidadPresupuesto, SUM(p.CANTIDAD_VENTA) as cantidadVenta,
+            CASE
+            WHEN SUM(p.MONTO_PRESUPUESTO) > 0 THEN (SUM(p.MONTO_VENTA) / SUM(p.MONTO_PRESUPUESTO)) * 100
+            ELSE 0 END as cumplimientoMonto,
+            CASE
+            WHEN SUM(p.UNIDAD_PRESUPUESTADA) > 0 THEN (SUM(p.CANTIDAD_VENTA) / (SUM(p.UNIDAD_PRESUPUESTADA) + 0.0)  ) * 100
+            ELSE 0 END AS cumplimientoCantidad
+            from PRESUPUESTO_PERSONAL_CUMPLIMIENTO p
+            where p.COD_PERSONAL = #{codPersonal}
+            and p.COD_PRESUPUESTO = #{codPresupuesto}
+            group by p.COD_PERSONAL
+
+    </select>
+    <select id="obtenerCumplimientoFucionarioLineaventa"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.payload.CumplimientoFucionarioLineaVenta">
+
+                select p.COD_PERSONAL as codPersonal, p.NOMBRE_LINEAVENTA as nombreLineaVenta,
+                sum(p.MONTO_PRESUPUESTO) as montoPresupuesto, SUM(p.MONTO_VENTA) as montoVenta,
+                SUM(p.UNIDAD_PRESUPUESTADA) as cantidadPresupuesto, SUM(p.CANTIDAD_VENTA) as cantidadVenta,
+                CASE
+                WHEN SUM(p.MONTO_PRESUPUESTO) > 0 THEN (SUM(p.MONTO_VENTA) / SUM(p.MONTO_PRESUPUESTO)) * 100
+                ELSE 0 END as cumplimientoMonto,
+                CASE
+                WHEN SUM(p.UNIDAD_PRESUPUESTADA) > 0 THEN (SUM(p.CANTIDAD_VENTA) / (SUM(p.UNIDAD_PRESUPUESTADA) + 0.0)  ) * 100
+                ELSE 0 END AS cumplimientoCantidad
+                from PRESUPUESTO_PERSONAL_CUMPLIMIENTO p
+                where p.COD_PERSONAL = #{codPersonal}
+                and p.COD_PRESUPUESTO = #{codPresupuesto}
+                group by p.COD_PERSONAL, p.NOMBRE_LINEAVENTA
+
+    </select>
+    <select id="obtenerCumplimientoFucionarioLineaMkt"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.payload.CumplimientoFucionarioLineaMkt">
+        select p.COD_PERSONAL as codPersonal, p.COD_LINEAMKT as codLineaMkt, p.NOMBRE_LINEAMKT as nombreLineaMkt,
+        sum(p.MONTO_PRESUPUESTO) as montoPresupuesto, SUM(p.MONTO_VENTA) as montoVenta,
+        SUM(p.UNIDAD_PRESUPUESTADA) as cantidadPresupuesto, SUM(p.CANTIDAD_VENTA) as cantidadVenta,
+        CASE
+        WHEN SUM(p.MONTO_PRESUPUESTO) > 0 THEN (SUM(p.MONTO_VENTA) / SUM(p.MONTO_PRESUPUESTO)) * 100
+        ELSE 0 END as cumplimientoMonto,
+        CASE
+        WHEN SUM(p.UNIDAD_PRESUPUESTADA) > 0 THEN (SUM(p.CANTIDAD_VENTA) / (SUM(p.UNIDAD_PRESUPUESTADA) + 0.0)  ) * 100
+        ELSE 0 END AS cumplimientoCantidad
+        from PRESUPUESTO_PERSONAL_CUMPLIMIENTO p
+        where p.COD_PERSONAL = #{codPersonal}
+        and p.COD_PRESUPUESTO = #{codPresupuesto}
+        group by p.COD_PERSONAL, p.COD_LINEAMKT, p.NOMBRE_LINEAMKT
+    </select>
+    <select id="obtenerCumplimientoFucionarioPresentacion"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.payload.CumplimientoFucionarioPresentacion">
+        select p.COD_PERSONAL as codPersonal, p.COD_PRESENTACION as codPresentacion, p.COD_LINEAMKT as codLineaMkt, p.NOMBRE_PRODUCTO_PRESENTACION as nombrePresentacion,
+        sum(p.MONTO_PRESUPUESTO) as montoPresupuesto, SUM(p.MONTO_VENTA) as montoVenta,
+        SUM(p.UNIDAD_PRESUPUESTADA) as cantidadPresupuesto, SUM(p.CANTIDAD_VENTA) as cantidadVenta,
+        CASE
+        WHEN SUM(p.MONTO_PRESUPUESTO) > 0 THEN (SUM(p.MONTO_VENTA) / SUM(p.MONTO_PRESUPUESTO)) * 100
+        ELSE 0 END as cumplimientoMonto,
+        CASE
+        WHEN SUM(p.UNIDAD_PRESUPUESTADA) > 0 THEN (SUM(p.CANTIDAD_VENTA) / (SUM(p.UNIDAD_PRESUPUESTADA) + 0.0)  ) * 100
+        ELSE 0 END AS cumplimientoCantidad
+        from PRESUPUESTO_PERSONAL_CUMPLIMIENTO p
+        where p.COD_PERSONAL = #{codPersonal}
+        and p.COD_PRESUPUESTO = #{codPresupuesto}
+        group by p.COD_PERSONAL, p.COD_PRESENTACION, p.COD_LINEAMKT, p.NOMBRE_PRODUCTO_PRESENTACION
+        HAVING SUM(p.MONTO_PRESUPUESTO) > 0
+        order by p.NOMBRE_PRODUCTO_PRESENTACION
+    </select>
+    <select id="getCumplimientoFuncionarioResumenLinea"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.model.CumplimientoFuncionarioResumenLinea">
+        select SUM( p.MONTO_VENTA) montoVentas, sum( p.MONTO_PRESUPUESTO) montoPresupuesto,
+        (SUM( p.MONTO_VENTA)/ sum( p.MONTO_PRESUPUESTO)) * 100 as porcentajeCumplimiento
+        from PRESUPUESTO_PERSONAL_CUMPLIMIENTO p
+        where p.COD_PRESUPUESTO = #{codPresupuestoPersonal}
+        and p.cod_personal = #{codPersonal}
+        <if test="codLineaVenta != 0">
+             and p.COD_LINEAVENTA = #{codLineaVenta}
+        </if>
+    </select>
+    <select id="getCumplimientoClienteFuncionarioResumen"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.model.CumplimientoClienteFuncionarioResumen">
+        select COUNT(funCliente.COD_CLIENTE) totalClientesFuncionario,
+        COUNT(funClienteVenta.COD_CLIENTE) totalClienteFacturadoFuncionario,
+         (cast(COUNT(funClienteVenta.COD_CLIENTE) as float) /COUNT(funCliente.COD_CLIENTE)) * 100 as porcentajeCumplimiento
+        from (
+        select DISTINCT p.COD_CLIENTE
+        from CLIENTES_LINEASVENTA_VERSIONES p inner join PRESUPUESTO_PERSONAL pp
+        on p.COD_GESTION = pp.COD_GESTION and p.COD_MES = pp.COD_MES
+        where pp.COD_PRESUPUESTO = #{codPresupuesto}
+        and p.COD_PERSONAL = #{codPersonal}
+        ) as funCliente left join
+        (
+        select DISTINCT pv.COD_CLIENTE
+        from PRESUPUESTO_PRODUCTO_VENTAS pv
+        where pv.COD_PRESUPUESTO = #{codPresupuesto}
+        and pv.COD_PERSONAL = #{codPersonal}
+        ) as funClienteVenta
+        on funCliente.COD_CLIENTE = funClienteVenta.COD_CLIENTE
+    </select>
+
+    <select id="getFechaActualizacionVentas"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.payload.FechaActualizacionVentas">
+        select top 1 s.NRO_FACTURA nroFactura, CONVERT (char(10), s.FECHA_SALIDAVENTA, 103) fechaActualizacion, convert(char(8), s.FECHA_SALIDAVENTA, 108) hora,
+        case WHEN CONVERT (char(10), s.FECHA_SALIDAVENTA, 103) = CONVERT (char(10), GETDATE(), 103)
+        then  CONVERT (char(10), s.FECHA_SALIDAVENTA, 103)
+        else CONVERT (char(10), GETDATE(), 103)
+        end fechaActualizacionModificada
+        from SALIDAS_VENTAS s
+        where s.cod_estado_salidaventa != 2
+        and s.COD_TIPOSALIDAVENTAS = 3
+        and s.COD_AREA_EMPRESA = #{codAreaEmpresa}
+        order by s.FECHA_SALIDAVENTA desc
+    </select>
+    <select id="getSeguimientoClienteFuncionario"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.payload.SeguimientoClienteFuncionario">
+        select cliFunc.COD_PRESUPUESTO codPresupuesto, cliFunc.cod_cliente codCliente, cliFunc.nombre_cliente nombreCliente,
+        ventasActuales.montoVentaActual totalVentaActual, ventasActuales.ventaBphActual totalVentaActualBph , ventasActuales.ventaCofarActual totalVentaActualCofar,
+        ventasAnterior.montoVentaAnterior totalVentaAnterior, ventasAnterior.ventaBphAnterior totalVentaAnteriorBph, ventasAnterior.ventaCofarAnterior totalVentaAnteriorCofar,
+        ventasActuales.descuentoFidelidadCalculado totalVentaDescuentoFidelidadCalculado,
+        ventasActuales.descuentoFidelidadAplicado totalVentaDescuentoFidelidadAplicado
+        from (
+          select DISTINCT p.COD_PRESUPUESTO , c.cod_cliente, c.nombre_cliente
+          from presupuesto_personal p inner join CLIENTES_LINEASVENTA_VERSIONES clv
+          on p.COD_GESTION = clv.COD_GESTION
+          and p.COD_MES = clv.COD_MES
+          inner join clientes c
+          on clv.COD_CLIENTE = c.cod_cliente
+          where p.COD_PRESUPUESTO = #{codPresupuestoActual}
+        --  and c.cod_area_empresa = 46
+          and clv.cod_personal = #{codPersonal}
+          --and clv.COD_CLIENTE = 1622424
+        ) as cliFunc
+        left join
+        (
+         select p.cod_cliente, SUM( p.MONTO_VENTA ) montoVentaActual
+        ,sum(p.DESCUENTO_FIDELIDAD2) descuentoFidelidadAplicado
+        ,( select sum(pp.MONTO_VENTA) from PRESUPUESTO_PRODUCTO_VENTAS pp inner join PRESENTACIONES_PRODUCTO pre
+          on pp.COD_PRESENTACION = pre.cod_presentacion inner join LINEAS_VENTA_MKT l
+          on pre.COD_LINEAMKT = l.COD_LINEAMKT
+          where l.COD_LINEAVENTA = 1
+          and pp.COD_PRESUPUESTO = p.COD_PRESUPUESTO
+          and pp.COD_CLIENTE = p.COD_CLIENTE ) as ventaBphActual,
+        ( select sum(pp.MONTO_VENTA) from PRESUPUESTO_PRODUCTO_VENTAS pp inner join PRESENTACIONES_PRODUCTO pre
+          on pp.COD_PRESENTACION = pre.cod_presentacion inner join LINEAS_VENTA_MKT l
+          on pre.COD_LINEAMKT = l.COD_LINEAMKT
+          where l.COD_LINEAVENTA = 2
+          and pp.COD_PRESUPUESTO = p.COD_PRESUPUESTO
+          and pp.COD_CLIENTE = p.COD_CLIENTE
+           ) as ventaCofarActual
+
+           ,(
+            select SUM(cpc.DESCUENTO) from PRESUPUESTO_PERSONAL pp inner join COM_POLITICA_PRECIO_CORTE cpc
+            on pp.COD_GESTION = cpc.COD_GESTION and pp.COD_MES = cpc.COD_MES
+            where pp.COD_PRESUPUESTO = p.COD_PRESUPUESTO - 1
+            and cpc.COD_CLIENTE = p.COD_CLIENTE
+
+           ) as descuentoFidelidadCalculado
+        from PRESUPUESTO_PRODUCTO_VENTAS p
+        where p.COD_PRESUPUESTO = #{codPresupuestoActual}
+        group by p.cod_cliente, p.COD_PRESUPUESTO
+        ) as ventasActuales
+        on ventasActuales.cod_cliente = cliFunc.cod_cliente
+        left join
+        (
+          select p.cod_cliente
+        ,( select sum(pp.MONTO_VENTA)
+          from PRESUPUESTO_PRODUCTO_VENTAS pp
+          where pp.COD_PRESUPUESTO = p.COD_PRESUPUESTO
+          and pp.COD_CLIENTE = p.COD_CLIENTE ) as montoVentaAnterior
+         ,( select sum(pp.MONTO_VENTA) from PRESUPUESTO_PRODUCTO_VENTAS pp inner join PRESENTACIONES_PRODUCTO pre
+          on pp.COD_PRESENTACION = pre.cod_presentacion inner join LINEAS_VENTA_MKT l
+          on pre.COD_LINEAMKT = l.COD_LINEAMKT
+          where l.COD_LINEAVENTA = 1
+          and pp.COD_PRESUPUESTO = p.COD_PRESUPUESTO
+          and pp.COD_CLIENTE = p.COD_CLIENTE ) as ventaBphAnterior
+          ,( select sum(pp.MONTO_VENTA) from PRESUPUESTO_PRODUCTO_VENTAS pp inner join PRESENTACIONES_PRODUCTO pre
+          on pp.COD_PRESENTACION = pre.cod_presentacion inner join LINEAS_VENTA_MKT l
+          on pre.COD_LINEAMKT = l.COD_LINEAMKT
+          where l.COD_LINEAVENTA = 2
+          and pp.COD_PRESUPUESTO = p.COD_PRESUPUESTO
+          and pp.COD_CLIENTE = p.COD_CLIENTE ) as ventaCofarAnterior
+        from PRESUPUESTO_PRODUCTO_VENTAS p
+        where p.COD_PRESUPUESTO = #{codPresupuestoAnterior}
+        --and p.cod_cliente = 1622424
+        --and p.COD_PERSONAL = 1817
+        group by p.cod_cliente, p.COD_PRESUPUESTO
+        ) as ventasAnterior
+        on ventasAnterior.cod_cliente = cliFunc.cod_cliente
+        order by nombreCliente
+    </select>
+    <select id="getObtenerPresupuestoVentasDeRegional" resultType="java.lang.Double">
+        select  sum(pvm.CANTIDAD_UNITARIA * pvm.PRECIO_MINIMO)
+        from PRESUPUESTO_VENTASMENSUALDIV pvm,PRESENTACIONES_PRODUCTO p
+        where pvm.COD_PRESENTACION=p.cod_presentacion
+        and pvm.COD_PRESENTACION in(
+          select pp.COD_PRESENTACION
+          from PRODUCTOS_PRESUPUESTAR pp inner join PRESENTACIONES_PRODUCTO p
+          on pp.COD_PRESENTACION = p.cod_presentacion
+          inner join LINEAS_VENTA_MKT l
+          on p.COD_LINEAMKT = l.COD_LINEAMKT
+          where pp.cod_gestion = #{codGestion}
+          <if test="codLineaVenta != 0">
+              -- and p.COD_LINEAMKT = 2
+              and l.COD_LINEAVENTA = #{codLineaVenta}
+          </if>
+
+        ) and pvm.cod_periodo = #{codPeriodoVentas} and cod_mes = #{codMes}
+        and pvm.division in (
+        select d.COD_DIVISION
+        from DIVISION_AGENCIA d
+        where d.ESTADO_REGISTRO = 1
+        and d.COD_AREA_EMPRESA = #{codAreaEmpresa}
+        )
+    </select>
+    <select id="getSeguimientoVentasClienteFuncionario"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.payload.SeguimientoClienteFuncionario">
+
+        set dateformat ymd;
+        select cliFunc.COD_PRESUPUESTO codPresupuesto, cliFunc.cod_cliente codCliente, cliFunc.nombre_cliente nombreCliente,
+               ventasActuales.montoVentaActual totalVentaActual, ventasActuales.ventaBphActual totalVentaActualBph , ventasActuales.ventaCofarActual totalVentaActualCofar,
+               ventasAnterior.montoVentaAnterior totalVentaAnterior, ventasAnterior.ventaBphAnterior totalVentaAnteriorBph, ventasAnterior.ventaCofarAnterior totalVentaAnteriorCofar,
+               ventasActuales.descuentoFidelidadCalculado totalVentaDescuentoFidelidadCalculado,
+               ventasActuales.descuentoFidelidadAplicado totalVentaDescuentoFidelidadAplicado
+        from (
+                 select DISTINCT p.COD_PRESUPUESTO , c.cod_cliente, c.nombre_cliente
+                 from presupuesto_personal p inner join CLIENTES_LINEASVENTA_VERSIONES clv
+                                                        on p.COD_GESTION = clv.COD_GESTION and p.COD_MES = clv.COD_MES
+                                             inner join clientes c
+                                                        on clv.COD_CLIENTE = c.cod_cliente
+                 where p.COD_PRESUPUESTO = #{codPresupuestoActual}
+                   --  and c.cod_area_empresa = 46
+                   and clv.cod_personal = #{codPersonal}
+                 --and clv.COD_CLIENTE = 1622424
+             ) as cliFunc
+                 left join
+
+             (
+                 select p.cod_cliente, SUM( p.MONTO_VENTA ) montoVentaActual
+                      ,sum(p.DESCUENTO_FIDELIDAD2) descuentoFidelidadAplicado
+                      ,( select sum(pp.MONTO_VENTA) from SERIES_VENTAS_HECHOS pp inner join PRESENTACIONES_PRODUCTO pre
+                                                                                            on pp.COD_PRESENTACION = pre.cod_presentacion inner join LINEAS_VENTA_MKT l
+                                                                                                                                                     on pre.COD_LINEAMKT = l.COD_LINEAMKT
+                         where l.COD_LINEAVENTA = 1
+                           and pp.FECHA_VENTA BETWEEN #{fechaInicioActual, jdbcType=DATE } and #{fechaFinActual, jdbcType=DATE}
+                           and pp.COD_CLIENTE = p.COD_CLIENTE ) as ventaBphActual,
+                     ( select sum(pp.MONTO_VENTA) from SERIES_VENTAS_HECHOS pp inner join PRESENTACIONES_PRODUCTO pre
+                                                                                          on pp.COD_PRESENTACION = pre.cod_presentacion inner join LINEAS_VENTA_MKT l
+                                                                                                                                                   on pre.COD_LINEAMKT = l.COD_LINEAMKT
+                       where l.COD_LINEAVENTA = 2
+                         and pp.FECHA_VENTA BETWEEN #{fechaInicioActual, jdbcType=DATE } and #{fechaFinActual, jdbcType=DATE}
+                         and pp.COD_CLIENTE = p.COD_CLIENTE
+                     ) as ventaCofarActual
+
+                      ,(
+                     select SUM(cpc.DESCUENTO) from PRESUPUESTO_PERSONAL pp inner join COM_POLITICA_PRECIO_CORTE cpc
+                                                                                       on pp.COD_GESTION = cpc.COD_GESTION and pp.COD_MES = cpc.COD_MES
+                     where pp.COD_PRESUPUESTO = #{codPresupuestoActual} - 1
+                       and cpc.COD_CLIENTE = p.COD_CLIENTE
+
+                 ) as descuentoFidelidadCalculado
+                 from SERIES_VENTAS_HECHOS p
+                 where p.FECHA_VENTA BETWEEN #{fechaInicioActual, jdbcType=DATE } and #{fechaFinActual, jdbcType=DATE}
+                 group by p.cod_cliente
+
+             ) as ventasActuales
+             on ventasActuales.cod_cliente = cliFunc.cod_cliente
+
+                 left join
+             (
+                 select p.cod_cliente
+                      ,( select sum(pp.MONTO_VENTA)
+                         from SERIES_VENTAS_HECHOS pp
+                         where pp.FECHA_VENTA BETWEEN #{fechaInicioComparacion} and #{fechaFinComparacion}
+                           and pp.COD_CLIENTE = p.COD_CLIENTE ) as montoVentaAnterior
+                      ,( select sum(pp.MONTO_VENTA) from SERIES_VENTAS_HECHOS pp inner join PRESENTACIONES_PRODUCTO pre
+                                                                                            on pp.COD_PRESENTACION = pre.cod_presentacion inner join LINEAS_VENTA_MKT l
+                                                                                                                                                     on pre.COD_LINEAMKT = l.COD_LINEAMKT
+                         where l.COD_LINEAVENTA = 1
+                           and pp.FECHA_VENTA BETWEEN #{fechaInicioComparacion} and #{fechaFinComparacion}
+                           and pp.COD_CLIENTE = p.COD_CLIENTE ) as ventaBphAnterior
+                      ,( select sum(pp.MONTO_VENTA) from SERIES_VENTAS_HECHOS pp inner join PRESENTACIONES_PRODUCTO pre
+                                                                                            on pp.COD_PRESENTACION = pre.cod_presentacion inner join LINEAS_VENTA_MKT l
+                                                                                                                                                     on pre.COD_LINEAMKT = l.COD_LINEAMKT
+                         where l.COD_LINEAVENTA = 2
+                           and pp.FECHA_VENTA BETWEEN #{fechaInicioComparacion} and #{fechaFinComparacion}
+                           and pp.COD_CLIENTE = p.COD_CLIENTE ) as ventaCofarAnterior
+                 from SERIES_VENTAS_HECHOS p
+                 where  p.FECHA_VENTA BETWEEN #{fechaInicioComparacion} and #{fechaFinComparacion}
+                        --and p.cod_cliente = 1622424
+                        --and p.COD_PERSONAL = 1817
+                 group by p.cod_cliente
+             ) as ventasAnterior
+             on ventasAnterior.cod_cliente = cliFunc.cod_cliente
+        order by nombreCliente
+
+
+    </select>
+    <select id="obtenerFechaInicioFechaFinDePresupuesto"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.payload.FechaIntervalo">
+        select p.FECHA_INICIO fechaInicio, p.FECHA_FIN fechaFin
+        from PRESUPUESTO_PERSONAL P
+        where p.ESTADO_REGISTRO = 1
+    </select>
+
+</mapper>

@@ -18,6 +18,6 @@ public interface AdmUsuarioRepository {
 
     public List<Usuario> listarTodo();
 
-    public Usuario findByNombre(String nombre);
+   // public Usuario findByNombre(String nombre);
 
 }

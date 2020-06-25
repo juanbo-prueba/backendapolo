@@ -20,6 +20,7 @@ public class ClienteController {
 
     @GetMapping("/clientes")
     public List<Cliente> clientes() {
+        System.out.println("REST CLIENTE");
         return clienteService.getClientes();
     }
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cofar.backendapolo.cumplimientoFuncionario.mapper.SeguimientoClienteMapper">
+    <select id="obtieneListadoMesesComportamiento" resultType="java.util.Date">
+        set dateformat ymd;
+        select distinct fecha.MES
+        from (
+                 select distinct s.MES
+                 from SERIES_VENTAS_CLIENTE_PRODUCTO s
+                 where s.COD_CLIENTE = #{codCliente}
+                 union
+                 select distinct s.MES
+                 from SERIES_COBRANZAS_CLIENTE s
+                 where s.COD_CLIENTE = #{codCliente}
+                 union
+                 select distinct s.mes
+                 from SERIES_DESCUENTO_FIDELIDAD_CLIENTE s
+                 where s.COD_CLIENTE = #{codCliente}
+             ) fecha
+        where fecha.MES > '2018-12-31'
+        order by fecha.MES
+    </select>
+    <select id="obtieneVentasClienteDelMes" resultType="java.lang.Integer">
+        set DATEFORMAT ymd;
+        select ROUND(sum(s.MONTO_VENTA), 0)
+        from SERIES_VENTAS_CLIENTE_PRODUCTO s
+        where s.COD_CLIENTE = #{codCliente}
+          and s.MES = #{fechaMes, jdbcType=DATE}
+    </select>
+    <select id="obtieneCobranzasClienteDelMes" resultType="java.lang.Integer">
+        set DATEFORMAT ymd;
+        select ROUND(sum(s.MONTO), 0)
+        from SERIES_COBRANZAS_CLIENTE s
+        where s.COD_CLIENTE = #{codCliente}
+          and s.MES = #{fechaMes, jdbcType=DATE}
+    </select>
+    <select id="obtieneDescuentoFidelidadClienteDelMes" resultType="java.lang.Integer">
+        set DATEFORMAT ymd;
+        select ROUND(sum(s.MONTO), 0)
+        from SERIES_DESCUENTO_FIDELIDAD_CLIENTE s
+        where s.COD_CLIENTE = #{codCliente}
+          and s.MES = #{fechaMes, jdbcType=DATE}
+    </select>
+</mapper>

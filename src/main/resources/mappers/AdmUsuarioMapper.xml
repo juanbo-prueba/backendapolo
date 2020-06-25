@@ -23,6 +23,7 @@
             on u.COD_PERSONAL = p.COD_PERSONAL
             where u.NOMBRE_USUARIO = #{nombreUsuario}
             and u.COD_MODULO = 4
+            and p.COD_ESTADO_PERSONA = 1
     </select>
 
     <select id="findById" resultMap="UsuarioResulMap" >
@@ -39,8 +40,7 @@
     <select id="listarTodo" resultMap="UsuarioResulMap" >
        select u.id, u.email, u.name, u.password, u.username from users u
     </select>
-    <select id="findByNombre">
-    </select>
+
 
 
 </mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cofar.backendapolo.presupuestoFuncionario.mapper.PresupuestoFuncionarioMapper">
+
+	<select id="obtenerMesPresupuesto"
+			resultType="com.cofar.backendapolo.presupuestoFuncionario.model.PresupuestoMes">
+	       select p.cod_presupuesto codPresupuesto, m.nombre_mes nombreMes
+			from presupuesto_personal p inner join meses m
+			on p.cod_mes = m.cod_mes
+			where p.estado_registro = #{codEstadoregistro};
+	</select>
+
+
+</mapper>

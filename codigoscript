@@ -1,0 +1,280 @@
+---- creacion de menu
+CREATE TABLE [dbo].[VENTANAS_ZEUS_PLUS] (
+  [COD_VENTANA] int NOT NULL,
+  [PATH] varchar(50) COLLATE Modern_Spanish_CI_AS NULL,
+  [ICONO] varchar(25) COLLATE Modern_Spanish_CI_AS NULL,
+  [TITULO] varchar(50) COLLATE Modern_Spanish_CI_AS NULL,
+  [COD_PADRE] int NULL,
+  [ESTADO_REGISTRO] int NULL,
+  [ORDEN] int NULL,
+  PRIMARY KEY CLUSTERED ([COD_VENTANA])
+    WITH (
+      PAD_INDEX = OFF, IGNORE_DUP_KEY = OFF, STATISTICS_NORECOMPUTE = OFF,
+      ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+)
+ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[PERFIL_ZEUS_PLUS] (
+  [COD_PERFIL] int NOT NULL,
+  [NOMBRE_PERFIL] varchar(50) COLLATE Modern_Spanish_CI_AS NULL,
+  [ESTADO_REGISTRO] int NULL,
+  [DESCRIPCION_PERFIL] varchar(50) COLLATE Modern_Spanish_CI_AS NULL,
+  PRIMARY KEY CLUSTERED ([COD_PERFIL])
+    WITH (
+      PAD_INDEX = OFF, IGNORE_DUP_KEY = OFF, STATISTICS_NORECOMPUTE = OFF,
+      ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+)
+ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[PERFIL_ZEUS_PLUS_DETALLE] (
+  [COD_PERFIL] int NOT NULL,
+  [COD_VENTANA] int NOT NULL,
+  PRIMARY KEY CLUSTERED ([COD_PERFIL], [COD_VENTANA])
+    WITH (
+      PAD_INDEX = OFF, IGNORE_DUP_KEY = OFF, STATISTICS_NORECOMPUTE = OFF,
+      ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+)
+ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[USUARIOS_ACCESOS_ZEUS_PLUS] (
+  [COD_PERSONAL] int NOT NULL,
+  [COD_PERFIL] int NOT NULL,
+  [ESTADO_REGISTRO] int NULL,
+  PRIMARY KEY CLUSTERED ([COD_PERSONAL], [COD_PERFIL])
+    WITH (
+      PAD_INDEX = OFF, IGNORE_DUP_KEY = OFF, STATISTICS_NORECOMPUTE = OFF,
+      ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+)
+ON [PRIMARY]
+GO
+
+
+INSERT INTO [VENTANAS_ZEUS_PLUS] ([COD_VENTANA], [PATH], [ICONO], [TITULO], [COD_PADRE], [ESTADO_REGISTRO], [ORDEN])
+VALUES (1, N'/', N'', N'Inicio', 0, 1, 1)
+GO
+
+INSERT INTO [VENTANAS_ZEUS_PLUS] ([COD_VENTANA], [PATH], [ICONO], [TITULO], [COD_PADRE], [ESTADO_REGISTRO], [ORDEN])
+VALUES (2, N'/menu', N'fa fa-th', N'Cumplimiento Ventas', 0, 1, 2)
+GO
+
+INSERT INTO [VENTANAS_ZEUS_PLUS] ([COD_VENTANA], [PATH], [ICONO], [TITULO], [COD_PADRE], [ESTADO_REGISTRO], [ORDEN])
+VALUES (3, N'/cumplimientoFucionario/dashboard', N'', N'Funcionario', 2, 1, 1)
+GO
+
+INSERT INTO [VENTANAS_ZEUS_PLUS] ([COD_VENTANA], [PATH], [ICONO], [TITULO], [COD_PADRE], [ESTADO_REGISTRO], [ORDEN])
+VALUES (4, N'/menu/menu-1-3', N'', N'Analisis Clientes', 2, 1, 2)
+GO
+
+INSERT INTO [VENTANAS_ZEUS_PLUS] ([COD_VENTANA], [PATH], [ICONO], [TITULO], [COD_PADRE], [ESTADO_REGISTRO], [ORDEN])
+VALUES (5, N'/menu2', N'fa fa-th', N'Presupuesto ventas', 0, 1, 3)
+GO
+
+INSERT INTO [VENTANAS_ZEUS_PLUS] ([COD_VENTANA], [PATH], [ICONO], [TITULO], [COD_PADRE], [ESTADO_REGISTRO], [ORDEN])
+VALUES (6, N'/cumplimientoFucionario/dashboard', N'', N'Presupuesto', 5, 1, 1)
+GO
+
+/* Data for the 'PERFIL_ZEUS_PLUS' table  (Records 1 - 2) */
+
+INSERT INTO [PERFIL_ZEUS_PLUS] ([COD_PERFIL], [NOMBRE_PERFIL], [ESTADO_REGISTRO], [DESCRIPCION_PERFIL])
+VALUES (1, N'PROMOTOR VENTAS', 1, N'Promotor de ventas de la regional')
+GO
+
+INSERT INTO [PERFIL_ZEUS_PLUS] ([COD_PERFIL], [NOMBRE_PERFIL], [ESTADO_REGISTRO], [DESCRIPCION_PERFIL])
+VALUES (2, N'COORDINADRO DE VENTAS', 1, N'Prueba para Daphne')
+GO
+
+/* Data for the 'PERFIL_ZEUS_PLUS_DETALLE' table  (Records 1 - 6) */
+
+INSERT INTO [PERFIL_ZEUS_PLUS_DETALLE] ([COD_PERFIL], [COD_VENTANA])
+VALUES (1, 1)
+GO
+
+INSERT INTO [PERFIL_ZEUS_PLUS_DETALLE] ([COD_PERFIL], [COD_VENTANA])
+VALUES (1, 2)
+GO
+
+INSERT INTO [PERFIL_ZEUS_PLUS_DETALLE] ([COD_PERFIL], [COD_VENTANA])
+VALUES (1, 3)
+GO
+
+INSERT INTO [PERFIL_ZEUS_PLUS_DETALLE] ([COD_PERFIL], [COD_VENTANA])
+VALUES (1, 4)
+GO
+
+INSERT INTO [PERFIL_ZEUS_PLUS_DETALLE] ([COD_PERFIL], [COD_VENTANA])
+VALUES (1, 5)
+GO
+
+INSERT INTO [PERFIL_ZEUS_PLUS_DETALLE] ([COD_PERFIL], [COD_VENTANA])
+VALUES (1, 6)
+GO
+
+/* Data for the 'USUARIOS_ACCESOS_ZEUS_PLUS' table  (Records 1 - 1) */
+
+INSERT INTO [USUARIOS_ACCESOS_ZEUS_PLUS] ([COD_PERSONAL], [COD_PERFIL], [ESTADO_REGISTRO])
+VALUES (1430, 1, 1)
+GO
+
+
+/*PRESUPUESTO POR FUNCIONARIO*/
+// para el usuario se tiene que cambiar el tamaño de varchar contreseña esta en 50 colocar en 100
+
+CREATE TABLE [dbo].[LOG_APOLO] (
+  [ID_LOG] int IDENTITY(1, 1) NOT NULL,
+  [FECHA_REGISTRO] datetime NULL,
+  [DETALLE] varchar(500) COLLATE Modern_Spanish_CI_AS NULL,
+  [USUARIO] varchar(50) COLLATE Modern_Spanish_CI_AS NULL,
+  [URL] varchar(150) COLLATE Modern_Spanish_CI_AS NULL,
+  [TIEMPO_RESPUESTA] varchar(15) COLLATE Modern_Spanish_CI_AS NULL,
+  PRIMARY KEY CLUSTERED ([ID_LOG])
+    WITH (
+      PAD_INDEX = OFF, IGNORE_DUP_KEY = OFF, STATISTICS_NORECOMPUTE = OFF,
+      ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+)
+ON [PRIMARY]
+GO
+
+
+/*En esta tabal esta el resumen de las ventas por funcionario y cliente 
+1. se hace un insert con todos los clientes y sus ventas por producto
+2. se ejecuta el script para actualizar el cod personal de cada cliente
+*/
+CREATE TABLE [dbo].[PRESUPUESTO_PRODUCTO_VENTAS] (
+  [COD_PRESUPUESTO] int NOT NULL,
+  [COD_AREA_EMPRESA] int NOT NULL,
+  [COD_CLIENTE] int NOT NULL,
+  [COD_PERSONAL] int NOT NULL,
+  [COD_PRESENTACION] int NOT NULL,
+  [CANTIDAD_VENTA] int NOT NULL,
+  [CANTIDAD_UNITARIA_VENTA] int NOT NULL,
+  [MONTO_VENTA] float NOT NULL,
+  [FECHA_VENTA] datetime NOT NULL,
+  [COD_SALIDAVENTA] int NULL
+)
+ON [PRIMARY]
+GO
+
+---cod 64 es del mes mayo
+
+select *
+from PRESUPUESTO_PRODUCTO_VENTAS
+
+set dateformat ymd;
+insert into PRESUPUESTO_PRODUCTO_VENTAS
+select 64, s.COD_AREA_EMPRESA, s.COD_CLIENTE, 0,
+       p.cod_presentacion,
+       sd.cantidad_total,
+       sd.cantidad_unitariatotal,
+       (CASE sd.COD_OFERTA
+          When 0 Then isnull(sum(((isnull(sd.cantidad, 0) +(isnull(
+          sd.cantidad_unitaria, 0) / p.cantidad_presentacion)) * sd.precio_lista
+          *((100 - sd.porcentaje_aplicadoprecio) / 100) *((100 - isnull(
+          s.PORCENTAJE_DESCUENTO_PREFERENCIAL, 0)) / 100) *((100 -
+          s.porcentaje_descuento) / 100) *((100 - s.DESCUENTO_FIDELIDAD) / 100)
+          *((100 -(s.DESCUENTO_CONTADO)) / 100) *((100 -
+          s.DESCUENTO_PREFERENCIAL) / 100) -(isnull(PART_CHEQUE, 0) * isnull(
+          sd.MONTO_CHEQUE, 0)))), 0)
+          ELSE isnull(sum(((isnull(sd.cantidad, 0) +(isnull(sd.cantidad_unitaria
+          , 0) / p.cantidad_presentacion)) * sd.precio_lista *((100 -
+          sd.porcentaje_aplicadoprecio) / 100) *((100 - s.DESCUENTO_FIDELIDAD) /
+          100) *((100 -(s.DESCUENTO_CONTADO)) / 100) *((100 -
+          s.DESCUENTO_PREFERENCIAL) / 100) -(isnull(PART_CHEQUE, 0) * isnull(
+          sd.MONTO_CHEQUE, 0)))), 0)
+        END) as monto,
+      
+      s.fecha_salidaventa, s.COD_SALIDAVENTA
+from PRESENTACIONES_PRODUCTO p,
+     SALIDAS_VENTAS s,
+     SALIDAS_DETALLEVENTAS sd
+where s.cod_salidaventa = sd.cod_salidaventas and
+      sd.cod_presentacion = p.cod_presentacion and
+      S.COD_AREA_EMPRESA = SD.COD_AREA_EMPRESA AND
+      s.fecha_salidaventa BETWEEN '2019-05-01 00:00:00' and
+      ' 2020-05-31 23:59:59'      and
+      s.cod_estado_salidaventa <> 2 and 
+      s.COD_TIPOSALIDAVENTAS = 3
+      and s.COD_AREA_EMPRESA = 46
+     -- and s.COD_SALIDAVENTA = 1037511
+group by s.COD_AREA_EMPRESA, s.COD_CLIENTE, 
+       p.cod_presentacion,
+       sd.cantidad_total,
+       sd.cantidad_unitariatotal,
+         sd.cod_oferta,
+        s.fecha_salidaventa, s.COD_SALIDAVENTA
+		
+
+
+update p set COD_PERSONAL = c.COD_PERSONAL
+from PRESUPUESTO_PRODUCTO_VENTAS p inner join CLIENTES_LINEASVENTA_VERSIONES c
+on p.COD_CLIENTE = c.COD_CLIENTE
+inner join PRESENTACIONES_PRODUCTO pp 
+on pp.cod_presentacion = p.COD_PRESENTACION
+inner join LINEAS_VENTA_MKT lv
+on pp.COD_LINEAMKT = lv.COD_LINEAMKT
+and lv.COD_LINEAVENTA = c.COD_LINEAVENTA
+where p.COD_PRESUPUESTO = 64
+and c.COD_GESTION = 15
+and c.COD_MES = 5
+
+
+/*PRESUPUESTO_PERSONAL_CUMPLIMIENTO
+en esta tabla esta el resumen de presupuesto y ventas por personal y presentacion
+*/
+
+CREATE TABLE [dbo].[PRESUPUESTO_PERSONAL_CUMPLIMIENTO] (
+  [COD_PRESUPUESTO] int NULL,
+  [COD_AREA_EMPRESA] int NULL,
+  [COD_PERSONAL] int NULL,
+  [COD_PRESENTACION] int NULL,
+  [NOMBRE_PRODUCTO_PRESENTACION] varchar(100) COLLATE Modern_Spanish_CI_AS NULL,
+  [COD_LINEAMKT] int NULL,
+  [NOMBRE_LINEAMKT] varchar(20) COLLATE Modern_Spanish_CI_AS NULL,
+  [COD_LINEAVENTA] int NULL,
+  [NOMBRE_LINEAVENTA] varchar(20) COLLATE Modern_Spanish_CI_AS NULL,
+  [MONTO_PRESUPUESTO] float NULL,
+  [UNIDAD_PRESUPUESTADA] int NULL,
+  [MONTO_VENTA] float NULL,
+  [CANTIDAD_VENTA] int NULL,
+  [CANTIDAD_UNITARIA_VENTA] int NULL
+)
+ON [PRIMARY]
+GO
+
+
+
+insert into PRESUPUESTO_PERSONAL_CUMPLIMIENTO
+select presupuesto.COD_PRESUPUESTO, presupuesto.COD_AREA_EMPRESA, presupuesto.COD_PERSONAL, presupuesto.COD_PRESENTACION, 
+presupuesto.NOMBRE_PRODUCTO_PRESENTACION, presupuesto.COD_LINEAMKT, presupuesto.NOMBRE_LINEAMKT, 
+presupuesto.COD_LINEAVENTA, presupuesto.NOMBRE_LINEAVENTA, presupuesto.MONTO_PRESUPUESTO, presupuesto.UNIDAD_PRESUPUESTADA,
+ventas.MONTO_VENTA, ventas.CANTIDAD_VENTA, ventas.CANTIDAD_UNITARIA_VENTA
+from (
+select p.COD_PRESUPUESTO, p.COD_AREA_EMPRESA, p.COD_PERSONAL, p.COD_PRESENTACION, 
+pp.NOMBRE_PRODUCTO_PRESENTACION, l.COD_LINEAMKT, l.NOMBRE_LINEAMKT, lv.COD_LINEAVENTA, lv.NOMBRE_LINEAVENTA,
+sum (p.MONTO_PRESUPUESTO) MONTO_PRESUPUESTO, sum( p.UNIDAD_PRESUPUESTADA) UNIDAD_PRESUPUESTADA
+from PRESUPUESTO_PERSONAL_LINEAMKT p inner join PRESENTACIONES_PRODUCTO pp
+on p.COD_PRESENTACION = pp.cod_presentacion
+inner join LINEAS_MKT l
+on l.COD_LINEAMKT = pp.COD_LINEAMKT
+inner join LINEAS_VENTA_MKT lvm 
+on l.COD_LINEAMKT = lvm.COD_LINEAMKT
+inner join LINEAS_VENTAS lv
+on lvm.COD_LINEAVENTA = lv.COD_LINEAVENTA
+where p.COD_PRESUPUESTO = 64
+--and p.COD_PERSONAL = 1970
+and p.COD_AREA_EMPRESA = 46
+and p.COD_PRESENTACION > 0
+group by p.COD_PRESUPUESTO, p.COD_PERSONAL, p.COD_PRESENTACION, 
+pp.NOMBRE_PRODUCTO_PRESENTACION, l.COD_LINEAMKT, l.NOMBRE_LINEAMKT, lv.COD_LINEAVENTA, lv.NOMBRE_LINEAVENTA, p.COD_AREA_EMPRESA
+) as presupuesto left join (
+	select pv.COD_PRESUPUESTO, pv.COD_PERSONAL, pv.COD_PRESENTACION, sum(pv.MONTO_VENTA) MONTO_VENTA, sum(pv.CANTIDAD_VENTA) CANTIDAD_VENTA, sum(pv.CANTIDAD_UNITARIA_VENTA) CANTIDAD_UNITARIA_VENTA
+    from PRESUPUESTO_PRODUCTO_VENTAS pv
+    where pv.COD_PRESUPUESTO = 64
+   -- and pv.COD_AREA_EMPRESA = 46
+    group by pv.COD_PRESUPUESTO, pv.COD_PERSONAL, pv.COD_PRESENTACION
+) as ventas 
+on presupuesto.COD_PRESUPUESTO = ventas.COD_PRESUPUESTO
+and presupuesto.COD_PERSONAL = ventas.COD_PERSONAL
+and presupuesto.COD_PRESENTACION = ventas.COD_PRESENTACION
