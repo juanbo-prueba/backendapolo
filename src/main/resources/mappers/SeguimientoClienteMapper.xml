@@ -17,7 +17,7 @@
                  from SERIES_DESCUENTO_FIDELIDAD_CLIENTE s
                  where s.COD_CLIENTE = #{codCliente}
              ) fecha
-        where fecha.MES > '2018-12-31'
+        where fecha.MES > #{fechaDesde, jdbcType=DATE}
         order by fecha.MES
     </select>
     <select id="obtieneVentasClienteDelMes" resultType="java.lang.Integer">
@@ -41,4 +41,95 @@
         where s.COD_CLIENTE = #{codCliente}
           and s.MES = #{fechaMes, jdbcType=DATE}
     </select>
+    <select id="obtieneListadoVentasDeClientePorLineaDeVenta"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.payload.MesValor">
+        set dateformat ymd;
+        select mesVenta.MES mes,  ROUND( isnull(ventas.montoFactura, 0) , 0)valor
+        from  (
+                  select distinct s.MES
+                  from SERIES_VENTAS_CLIENTE_PRODUCTO s
+                  where s.COD_CLIENTE = #{codCliente} and
+                      s.MES > #{fechaDesde, jdbcType=DATE}
+              ) mesVenta
+                  left join
+              (
+                  select vh.MES,
+                         SUM(vh.MONTO_VENTA) montoFactura
+                  from SERIES_VENTAS_CLIENTE_PRODUCTO vh
+                           inner JOIN PRESENTACIONES_PRODUCTO p on vh.COD_PRESENTACION =
+                                                                   p.cod_presentacion
+                           inner join LINEAS_VENTA_MKT l on p.COD_LINEAMKT = l.COD_LINEAMKT
+                  where vh.COD_CLIENTE = #{codCliente} and
+                      l.COD_LINEAVENTA = #{codLineaVenta}
+                  group by vh.MES,
+                           vh.COD_AREA_EMPRESA,
+                           vh.COD_CLIENTE
+              ) ventas on mesVenta.MES = ventas.MES
+        order by mesVenta.MES
+    </select>
+    <select id="obtieneListadoMesesVentasCliente" resultType="java.util.Date">
+        set dateformat ymd;
+        select distinct s.MES
+        from SERIES_VENTAS_CLIENTE_PRODUCTO s
+        where s.COD_CLIENTE = #{codCliente} and
+            s.MES > #{fechaDesde, jdbcType=DATE}
+        order by s.MES
+    </select>
+    <select id="obtieneListadoVentasDeClientePorLineaDeMarketing"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.payload.MesValor">
+            set dateformat ymd;
+            select mesVenta.MES mes,  ROUND( isnull(ventas.montoFactura, 0) , 0)valor
+            from  (
+                      select distinct s.MES
+                      from SERIES_VENTAS_CLIENTE_PRODUCTO s
+                      where s.COD_CLIENTE = #{codCliente} and
+                          s.MES > #{fechaDesde, jdbcType = DATE}
+                  ) mesVenta
+                      left join
+                  (
+                      select vh.MES,
+                             SUM(vh.MONTO_VENTA) montoFactura
+                      from SERIES_VENTAS_CLIENTE_PRODUCTO vh
+                               inner JOIN PRESENTACIONES_PRODUCTO p on vh.COD_PRESENTACION =
+                                                                       p.cod_presentacion
+                      where vh.COD_CLIENTE = #{codCliente} and
+                          p.COD_LINEAMKT = #{codLineaMkt}
+                      group by vh.MES,
+                               vh.COD_AREA_EMPRESA,
+                               vh.COD_CLIENTE
+                  ) ventas on mesVenta.MES = ventas.MES
+            order by mesVenta.MES
+    </select>
+
+    <select id="getLineasDeMarketingPorLineaDeVenta"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.model.LineaMarketing">
+        select l.COD_LINEAMKT codLineaMarketing, l.NOMBRE_LINEAMKT nombreLineaMarketing
+        from LINEAS_MKT l inner join LINEAS_VENTA_MKT lvmkt on l.COD_LINEAMKT = lvmkt.COD_LINEAMKT
+        where lvmkt.COD_LINEAVENTA = #{codLineaVenta}
+          and l.COD_LINEAMKT not in (4)
+    </select>
+
+    <resultMap id="ventaPorlineaDeVenta0" type="com.cofar.backendapolo.cumplimientoFuncionario.payload.DatoTipos">
+        <result column="NOMBRE_LINEAVENTA" property="name" />
+        <collection property="data" ofType="integer" notNullColumn="montoFactura">
+            <result column="montoFactura" />
+        </collection>
+    </resultMap>
+
+    <resultMap id="ventaPorlineaDeVenta" type="com.cofar.backendapolo.cumplimientoFuncionario.payload.DatoTipos">
+        <result column="NOMBRE_LINEAVENTA" property="name" />
+        <collection property="data" ofType="integer" notNullColumn="montoFactura">
+            <result column="montoFactura" />
+        </collection>
+    </resultMap>
+
+    <resultMap id="ventaPorlineaDeVenta2" type="com.cofar.backendapolo.cumplimientoFuncionario.payload.DatosTipos2">
+        <result column="NOMBRE_LINEAVENTA" property="name" />
+        <collection property="data" ofType="com.cofar.backendapolo.cumplimientoFuncionario.payload.MesValor">
+            <result property="mes" column="MES"/>
+            <result property="valor" column="montoFactura" />
+        </collection>
+    </resultMap>
+
+
 </mapper>

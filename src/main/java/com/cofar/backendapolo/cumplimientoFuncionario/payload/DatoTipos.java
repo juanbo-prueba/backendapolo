@@ -4,10 +4,19 @@ import java.util.ArrayList;
 
 public class DatoTipos {
 
-    private String name;
+    private String name = "";
     private ArrayList<Integer> data = new ArrayList<>();
 
     public DatoTipos() {
+    }
+
+    public DatoTipos(ArrayList<Integer> data) {
+        this.data = data;
+    }
+
+    public DatoTipos(String name, ArrayList<Integer> data) {
+        this.name = name;
+        this.data = data;
     }
 
     public String getName() {
