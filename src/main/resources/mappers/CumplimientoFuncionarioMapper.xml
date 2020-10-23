@@ -305,7 +305,7 @@
             resultType="com.cofar.backendapolo.cumplimientoFuncionario.payload.FechaIntervalo">
         select p.FECHA_INICIO fechaInicio, p.FECHA_FIN fechaFin
         from PRESUPUESTO_PERSONAL P
-        where p.ESTADO_REGISTRO = 1
+        where p.ESTADO_REGISTRO = #{estadoRegistro}
     </select>
 
 </mapper>

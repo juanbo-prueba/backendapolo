@@ -15,4 +15,9 @@ public class TestDashboardFuncionario {
     public void testSegumientoDashboard(){
         seguimientoFuncionarioDashboardService.obtenerKPIPresupuestoFuncionario(1817);
     }
+
+    @Test
+    public void testSeguimientoLineaDeVenta(){
+        seguimientoFuncionarioDashboardService.obtenerPresupuestoYVentaDeFuncionarioParaGraficoDeBarras(1817);
+    }
 }

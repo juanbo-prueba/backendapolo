@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cofar.backendapolo.cumplimientoFuncionario.mapper.SeguimientoFuncionarDashboardMapper">
-    <select id="obtenerKPIPresupuestoFuncionario"
-            resultType="com.cofar.backendapolo.cumplimientoFuncionario.payload.ResumenCumplimientoFuncionarioAnalisis">
 
-    </select>
     <select id="obtenerPresupuestoFuncionarioActivo" resultType="java.lang.Integer">
         select p.COD_PRESUPUESTO from PRESUPUESTO_PERSONAL p where p.ESTADO_REGISTRO = #{codEstadoPresupuesto}
     </select>
@@ -19,4 +16,17 @@
             and p.COD_LINEAVENTA = #{tipoSegumiento}
         </if>
     </select>
+    <select id="obtenerPresupuestoYVentaDeFuncionarioParaGraficoDeBarras"
+            resultType="com.cofar.backendapolo.cumplimientoFuncionario.model.MaestroPresupuestoVentas">
+        select  p.COD_LINEAVENTA codigo, p.NOMBRE_LINEAVENTA nombre, round(SUM(p.MONTO_VENTA), 2) montoVentas,
+        round(sum(p.MONTO_PRESUPUESTO), 2) montoPresupuesto,
+        round((SUM(p.MONTO_VENTA) / sum(p.MONTO_PRESUPUESTO)) * 100, 2) as
+        porcentajeCumplimiento
+        from PRESUPUESTO_PERSONAL_CUMPLIMIENTO p
+        where p.COD_PRESUPUESTO = #{codPresupuesto} and
+              p.cod_personal = #{codPersonal}
+        group by  p.COD_LINEAVENTA, p.NOMBRE_LINEAVENTA
+        order by p.COD_LINEAVENTA
+    </select>
+
 </mapper>

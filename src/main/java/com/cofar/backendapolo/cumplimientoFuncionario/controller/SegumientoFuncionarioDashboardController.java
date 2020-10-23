@@ -1,5 +1,6 @@
 package com.cofar.backendapolo.cumplimientoFuncionario.controller;
 
+import com.cofar.backendapolo.cumplimientoFuncionario.payload.DatosGraficoBarras;
 import com.cofar.backendapolo.cumplimientoFuncionario.payload.ResumenCumplimientoFuncionarioAnalisis;
 import com.cofar.backendapolo.cumplimientoFuncionario.service.SeguimientoFuncionarioDashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +22,11 @@ public class SegumientoFuncionarioDashboardController {
     public ResumenCumplimientoFuncionarioAnalisis obtenerKPIPresupuestoFuncionario(@PathVariable("codPersonal") int codPersonal) {
         return seguimientoFuncionarioDashboardService.obtenerKPIPresupuestoFuncionario( codPersonal );
     }
+
+    @GetMapping("/graficoBarrasLineaDeVentaFuncionario/{codPersonal}")
+    public DatosGraficoBarras obtenerDatoGraficoDeBarrasLineasDeVentasFuncionario(@PathVariable("codPersonal") int codPersonal) {
+        return seguimientoFuncionarioDashboardService.obtenerPresupuestoYVentaDeFuncionarioParaGraficoDeBarras( codPersonal );
+    }
+
 
 }

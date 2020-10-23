@@ -1,13 +1,18 @@
 package com.cofar.backendapolo.cumplimientoFuncionario.service.impl;
 
 import com.cofar.backendapolo.cumplimientoFuncionario.mapper.SeguimientoFuncionarDashboardMapper;
+import com.cofar.backendapolo.cumplimientoFuncionario.model.MaestroPresupuestoVentas;
 import com.cofar.backendapolo.cumplimientoFuncionario.model.PorcentajeCumplimiento;
+import com.cofar.backendapolo.cumplimientoFuncionario.payload.DatosGraficoBarras;
+import com.cofar.backendapolo.cumplimientoFuncionario.payload.DatosTipos2;
 import com.cofar.backendapolo.cumplimientoFuncionario.payload.ResumenCumplimientoFuncionarioAnalisis;
 import com.cofar.backendapolo.cumplimientoFuncionario.repository.SeguimientoFuncionarDashboardRepository;
 import com.cofar.backendapolo.cumplimientoFuncionario.service.SeguimientoFuncionarioDashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service("SeguimientoFuncionarDashboardService")
 public class SeguimientoFuncionarDashboardImpl implements SeguimientoFuncionarioDashboardService {
@@ -49,5 +54,37 @@ public class SeguimientoFuncionarDashboardImpl implements SeguimientoFuncionario
         }
 
         return cumplimiento;
+    }
+
+    @Override
+    public DatosGraficoBarras obtenerPresupuestoYVentaDeFuncionarioParaGraficoDeBarras(int codPersonal) {
+
+        int codEstadoPresupuesto = 1;
+
+        DatosGraficoBarras lista = new DatosGraficoBarras();
+        DatosTipos2 presupuesto = new DatosTipos2();
+        DatosTipos2 ventas = new DatosTipos2();
+
+        Integer codPresupuestoActivo = seguimientoFuncionarDashboardRepository.obtenerPresupuestoFuncionarioActivo(codEstadoPresupuesto);
+        ArrayList<MaestroPresupuestoVentas> cumplimientoLineaventa = seguimientoFuncionarDashboardRepository.obtenerPresupuestoYVentaDeFuncionarioParaGraficoDeBarras(codPersonal, codPresupuestoActivo);
+
+        for (MaestroPresupuestoVentas dato: cumplimientoLineaventa) {
+            lista.getCategories().add( dato.getNombre() );
+        }
+
+        presupuesto.setName("Prespuesto");
+        for (MaestroPresupuestoVentas dato: cumplimientoLineaventa) {
+            presupuesto.getData().add(dato.getMontoPresupuesto());
+        }
+
+        ventas.setName("Ventas");
+        for (MaestroPresupuestoVentas dato: cumplimientoLineaventa) {
+            ventas.getData().add(dato.getMontoVentas());
+        }
+
+        lista.getDatos().add(presupuesto);
+        lista.getDatos().add(ventas);
+
+        return lista;
     }
 }
